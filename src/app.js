@@ -4,10 +4,22 @@ const app = express();
 const PORT = 3000;
 
 
-
-app.get("/", (req, res) => {
-    res.send("<h1>Hello World</h1>")
+app.get('/user', (req,res) => {
+    res.send({
+        firstName: "Md Zeeshan",
+        lastName: "Zafar"
+    })
 })
+
+app.post('/user', (req,res)=> {
+    res.send("Data saved successfully to DB");
+    
+})
+
+app.use("/test", (req, res) => {
+    res.send("Hello from the server")
+})
+
 
 
 
