@@ -3,26 +3,22 @@ const app = express();
 
 const PORT = 3000;
 
+const { adminAuth, userAuth } = require('./middlewares/auth')
 
-app.get('/user', (req,res, next) => {
-    next()
-    res.send('Response 1')
-    
-}, (req,res) => {
-    res.send("Response 2")
+//Handle Auth Middleware for all type of request (Get, post, patch......)
+
+app.use("/admin", adminAuth)
+app.get('/user', userAuth, (req,res) =>{
+    res.send('User data sent')
 })
 
-app.post('/user', (req,res)=> {
-    res.send("Data saved successfully to DB");
-    
+app.get('/admin/getAllData', (req,res) =>{
+    res.send('All data sent')
 })
 
-app.use("/test", (req, res) => {
-    res.send("Hello from the server")
+app.get('/admin/deleteUser', (req,res) =>{
+    res.send('Deleted a user')
 })
-
-
-
 
 
 app.listen(PORT || 3000, () => {
