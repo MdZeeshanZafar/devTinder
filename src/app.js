@@ -4,11 +4,12 @@ const app = express();
 const PORT = 3000;
 
 
-app.get('/user', (req,res) => {
-    res.send({
-        firstName: "Md Zeeshan",
-        lastName: "Zafar"
-    })
+app.get('/user', (req,res, next) => {
+    next()
+    res.send('Response 1')
+    
+}, (req,res) => {
+    res.send("Response 2")
 })
 
 app.post('/user', (req,res)=> {
