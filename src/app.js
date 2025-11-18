@@ -1,39 +1,37 @@
 const express = require("express");
+const connectDB = require("./config/database")
 const app = express();
+const User = require("./models/user")
 
-const PORT = 3000;
 
-const { adminAuth, userAuth } = require('./middlewares/auth')
-
-//Handle Auth Middleware for all type of request (Get, post, patch......)
-
-// app.use("/admin", adminAuth)
-// app.get('/user', userAuth, (req,res) =>{
-//     res.send('User data sent')
-// })
-
-// app.get('/admin/getAllData', (req,res) =>{
-//     res.send('All data sent')
-// })
-
-// app.get('/admin/deleteUser', (req,res) =>{
-//     res.send('Deleted a user')
-// })
-
-//error handling
-app.get("/getUserData", (req, res) =>{
-
-    throw new Error("fghjk")
-    res.send("User data sent")
-})
-
-app.use("/", (err, req, res, next) => {
-    if(err) {
-        res.status(500).send("Something went wrong ")
+app.post("/signup", async (req,res) => {
+    const user = new User({
+        firstName: "Jhon",
+        lastName: "Jones",
+        email: "atttf@df.com",
+        password: "qwddrty"
+    })
+    try {
+        await user.save()
+        res.send("User added successfully")
+    } catch (err) {
+        res.status(400).send("Error saving the user "+ err.message)
     }
-})
-
-app.listen(PORT || 3000, () => {
-    console.log(`Server is up and running on Port ${PORT}.`);
+    
     
 })
+
+
+
+
+connectDB()
+    .then(() => {
+        console.log("Database connection established....");
+        app.listen(3000, () => {
+            console.log(`Server is up and running on Port 3000...`);
+        })
+    })
+    .catch((err) => {
+        console.log("Database can't be connected");
+    
+    })
