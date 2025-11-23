@@ -9,6 +9,9 @@ app.post("/signup", async (req,res) => {
     
     const user = new User(req.body)
     try {
+        if(req.body?.skills.length > 10) {
+            throw new Error("Skills can't be more than 10")
+        }
         await user.save()
         res.send("User added successfully")
     } catch (err) {
@@ -73,11 +76,21 @@ app.delete("/user", async (req, res) => {
     }
 })
 
-app.patch("/user", async (req, res) => {
-    const userId = req.body.userId
+app.patch("/user/:userId", async (req, res) => {
+    const userId = req.params?.userId
     const data = req.body
     
     try{
+        const ALLOWED_UPDATES = ["photoUrl", "about", "gender", "skills", "age"];
+        const isUpdateAllowed = Object.keys(data).every((k) => 
+        ALLOWED_UPDATES.includes(k)
+            )
+        if(!isUpdateAllowed) {
+            throw new Error ("Update not allowed")
+            }
+        if(data?.skills.length > 10) {
+            throw new Error("Skills can't be more than 10")
+        }
         await User.findByIdAndUpdate({_id: userId}, data, {
             runValidators: true
         });
